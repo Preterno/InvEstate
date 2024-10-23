@@ -1,0 +1,193 @@
+<style>
+  h1.prediction-header {
+    text-align: center;
+    color: #1557b0;
+    margin-bottom: 30px;
+  }
+
+  form.prediction-form {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: auto;
+  }
+
+  label.prediction-label {
+    margin-top: 10px;
+    display: block;
+    font-weight: 500;
+    color: #5f6368;
+  }
+
+  input.prediction-input {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0 15px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+  }
+
+  input.prediction-input:focus {
+    border-color: #1557b0;
+    outline: none;
+  }
+
+  button.prediction-button {
+    background-color: #1557b0;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+  }
+
+  button.prediction-button:hover {
+    background-color: #1557b0;
+  }
+
+  #result {
+    text-align: center;
+    margin-top: 30px;
+    display: none;
+    font-size: 1.5em;
+    color: #333;
+  }
+
+  .error-message {
+    color: #d93025;
+    font-size: 0.875rem;
+    margin-top: 4px;
+    display: none;
+  }
+
+  input:invalid + .error-message {
+    display: block;
+  }
+
+  .loading {
+    text-align: center;
+    margin-top: 20px;
+    display: none;
+  }
+
+  .loading::after {
+    animation: loading 1s infinite;
+  }
+
+  @keyframes loading {
+    0% {
+      opacity: 0.2;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0.2;
+    }
+  }
+</style>
+
+<div class="prediction-body">
+  <h1 class="prediction-header">Bengaluru Home Price Prediction</h1>
+  <form id="predictionForm" class="prediction-form">
+    <label for="location" class="prediction-label">Location:</label>
+    <input
+      type="text"
+      id="location"
+      name="location"
+      class="prediction-input"
+      required
+      placeholder="Enter location"
+    />
+
+    <label for="area" class="prediction-label">Area (in sq. ft.):</label>
+    <input
+      type="number"
+      id="area"
+      name="area"
+      class="prediction-input"
+      required
+      placeholder="Enter area"
+      min="1"
+    />
+
+    <label for="bhk" class="prediction-label">BHK:</label>
+    <input
+      type="number"
+      id="bhk"
+      name="bhk"
+      class="prediction-input"
+      min="1"
+      required
+      placeholder="Enter number of BHK"
+    />
+
+    <label for="bath" class="prediction-label">Bathrooms:</label>
+    <input
+      type="number"
+      id="bath"
+      name="bath"
+      class="prediction-input"
+      min="1"
+      required
+      placeholder="Enter number of bathrooms"
+    />
+
+    <button type="submit" class="prediction-button">Predict Price</button>
+    <div id="loading" class="loading">Predicting...</div>
+  </form>
+
+  <h2 id="result">Estimated Price: ₹<span id="price"></span> lakhs</h2>
+</div>
+<script>
+  document
+    .getElementById("predictionForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      // Show loading state
+      document.getElementById("loading").style.display = "block";
+
+      // Gather form data
+      const formData = {
+        location: document.getElementById("location").value,
+        area: document.getElementById("area").value,
+        bhk: document.getElementById("bhk").value,
+        bath: document.getElementById("bath").value,
+      };
+
+      // Send data to Flask backend using Fetch API
+      fetch("http://127.0.0.1:8080/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Hide loading state
+          document.getElementById("loading").style.display = "none";
+
+          // Display the estimated price in lakhs
+          document.getElementById("price").textContent =
+            data.estimated_price.toFixed(2);
+          document.getElementById("result").style.display = "block";
+        })
+        .catch((error) => {
+          // Hide loading state
+          document.getElementById("loading").style.display = "none";
+          alert("Error in prediction. Please check your input.");
+        });
+    });
+</script>

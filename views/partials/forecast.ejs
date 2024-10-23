@@ -1,0 +1,299 @@
+<style>
+  .forecast-container {
+    background-color: white;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    line-height: 1.6;
+  }
+
+  .forecast-inner-container {
+    padding: 30px;
+    margin-bottom: 10px;
+  }
+
+  .forecast-title {
+    color: #1557b0;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .forecast-price-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .forecast-input-group {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .forecast-input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #5f6368;
+    font-weight: 500;
+  }
+
+  .forecast-number-input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+  }
+
+  .forecast-number-input:focus {
+    border-color: #1557b0;
+    outline: none;
+  }
+
+  .forecast-button {
+    background-color: #1557b0;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .forecast-button:hover {
+    background-color: #1557b0;
+  }
+
+  .forecast-result {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+  }
+
+  .forecast-error {
+    background-color: #fce8e6;
+    color: #d93025;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid #d93025;
+  }
+
+  .forecast-loading {
+    text-align: center;
+    margin-top: 20px;
+    display: none;
+  }
+
+  .forecast-loading::after {
+    animation: loading 1s infinite;
+  }
+
+  .forecast-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px;
+    border-radius: 8px;
+  }
+
+  .forecast-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+
+  .forecast-table th,
+  .forecast-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .forecast-table th {
+    background-color: #f8f9fa;
+    color: #5f6368;
+  }
+
+  @keyframes loading {
+    0% {
+      opacity: 0.2;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0.2;
+    }
+  }
+</style>
+
+<div class="forecast-container">
+  <h1 class="forecast-title">Bangalore Housing Market Forecast</h1>
+
+  <div class="forecast-inner-container">
+    <h2>Enter Historical Data</h2>
+    <p>Please enter the housing prices (INR/sq.ft) for the last 12 months:</p>
+
+    <form id="forecast-prediction-form">
+      <div class="forecast-price-inputs" id="forecast-price-inputs"></div>
+      <button type="submit" class="forecast-button">Generate Forecast</button>
+    </form>
+    <div id="forecast-loading" class="forecast-loading">
+      Generating forecast...
+    </div>
+  </div>
+
+  <div id="forecast-result" class="forecast-result" style="display: none">
+    <h3>Forecast Results</h3>
+    <div id="forecast-prediction-table"></div>
+    <img id="forecast-plot-image" alt="Forecast Plot" class="forecast-image" />
+  </div>
+</div>
+
+<script>
+  const forecastPriceInputs = document.getElementById("forecast-price-inputs");
+  const forecastCurrentDate = new Date();
+
+  for (let i = 11; i >= 0; i--) {
+    const date = new Date(
+      forecastCurrentDate.getFullYear(),
+      forecastCurrentDate.getMonth() - i,
+      1
+    );
+    const monthYear = date.toLocaleString("default", {
+      month: "long",
+      year: "numeric",
+    });
+
+    const inputGroup = document.createElement("div");
+    inputGroup.className = "forecast-input-group";
+
+    const label = document.createElement("label");
+    label.textContent = monthYear;
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.required = true;
+    input.step = "0.01"; // Allow decimal values
+    input.min = "0"; // Prevent negative values
+    input.name = `price${11 - i}`;
+    input.placeholder = "Enter price";
+    input.className = "forecast-number-input";
+
+    inputGroup.appendChild(label);
+    inputGroup.appendChild(input);
+    forecastPriceInputs.appendChild(inputGroup);
+  }
+
+  // Handle form submission
+  document
+    .getElementById("forecast-prediction-form")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const prices = [];
+
+      // Collect input values
+      for (let i = 0; i < 12; i++) {
+        const input = form[`price${i}`];
+        prices.push(parseFloat(input.value));
+      }
+
+      // Show loading state
+      document.getElementById("forecast-loading").style.display = "block";
+      document.getElementById("forecast-result").style.display = "none";
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/forecast", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prices }),
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        const resultDiv = document.getElementById("forecast-result");
+        const predictionTableDiv = document.getElementById(
+          "forecast-prediction-table"
+        );
+        const plotImage = document.getElementById("forecast-plot-image");
+
+        // Clear previous content
+        predictionTableDiv.innerHTML = "";
+
+        // Create predictions table
+        const table = document.createElement("table");
+        table.className = "forecast-table";
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        ["Month", "Predicted Price (INR/sq.ft)"].forEach((text) => {
+          const th = document.createElement("th");
+          th.textContent = text;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        const futureMonths = [];
+        for (let i = 1; i <= 12; i++) {
+          const futureDate = new Date(
+            forecastCurrentDate.getFullYear(),
+            forecastCurrentDate.getMonth() + i,
+            1
+          );
+          const month = futureDate.toLocaleString("default", {
+            month: "long",
+            year: "numeric",
+          });
+          futureMonths.push(month);
+        }
+
+        data.predictions.forEach((price, index) => {
+          const row = document.createElement("tr");
+          const monthCell = document.createElement("td");
+          const priceCell = document.createElement("td");
+          monthCell.textContent = futureMonths[index];
+          priceCell.textContent = `₹${price.toLocaleString("en-IN", {
+            maximumFractionDigits: 2,
+          })}`;
+          row.appendChild(monthCell);
+          row.appendChild(priceCell);
+          tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        predictionTableDiv.appendChild(table);
+
+        plotImage.src = `data:image/png;base64,${data.plot}`;
+        resultDiv.style.display = "block";
+      } catch (error) {
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "forecast-error";
+        errorDiv.textContent =
+          error.message || "An error occurred while generating the forecast.";
+        document
+          .querySelector(".forecast-inner-container")
+          .appendChild(errorDiv);
+      } finally {
+        document.getElementById("forecast-loading").style.display = "none";
+      }
+    });
+</script>
