@@ -1,0 +1,78 @@
+<style>
+  .model-selector-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px;
+      padding-bottom: 1.5rem;
+  }
+
+  .model-selector-text {
+      font-size: 18px;
+      font-weight: 500;
+      margin-right: 10px;
+      color: #333;
+  }
+
+  .model-selector-dropdown {
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+      outline: none;
+  }
+
+  .model-selector-dropdown:hover {
+      border-color: #888;
+      background-color: #fff;
+  }
+</style>
+
+
+<div style="padding: 1.5rem 0; padding-bottom: 4rem;">
+    <div class="model-selector-container">
+        <span class="model-selector-text">Please select a model from the options below:</span>
+        <select class="model-selector-dropdown" id="modelSelection">
+            <option value="forecast">Forecast Model</option>
+            <option value="prediction">Prediction Model</option>
+        </select>
+    </div>
+
+
+
+  <div id="forecast">
+    <%- include('partials/forecast') %>
+  </div>
+  <div id="prediction">
+    <%- include('partials/prediction') %>
+  </div>
+</div>
+
+<script>
+  const forecastContainer=document.getElementById('forecast');
+  const predictionContainer=document.getElementById('prediction');
+  forecastContainer.style.display="block";
+  predictionContainer.style.display="none";
+
+  document.getElementById('modelSelection').addEventListener('change', function() {
+    const selectedModel = this.value;
+    if(selectedModel==="prediction"){
+      forecastContainer.style.display="none";
+      predictionContainer.style.display="block";
+    }
+    else{
+      forecastContainer.style.display="block";
+      predictionContainer.style.display="none";
+    }
+  });
+
+  document.getElementById('btn-forecast').onclick=()=>{
+    
+  }
+  document.getElementById('btn-predict').onclick=()=>{
+    
+  }
+</script>
