@@ -1,0 +1,34 @@
+<div style="padding: 4rem 8rem; background-color: #e4e4e4;">
+    <% if (locals.featuredProperties) { %>
+        <section>
+          <h2>Featured Property</h2>
+          <br>
+          <div class="carousel-container">
+            <div class="properties">
+              <% featuredProperties.forEach(function(property) { %>
+                <%- include('partials/property-card', { property: property }) %>
+              <% }) %>
+            </div>
+            <a href="#" class="carousel-arrow featured-prev">&#10094;</a>
+            <a href="#" class="carousel-arrow featured-next">&#10095;</a>
+          </div>
+          <br><br>
+        </section>
+      <% } %>
+    <% Object.keys(groupedProperties).forEach(function(propertyType) { %>
+        <section>
+            <h2><%= propertyType %></h2>
+            <br>
+            <div class="carousel-container">
+                <div class="properties">
+                    <% groupedProperties[propertyType].forEach(function(property) { %>
+                        <%- include('partials/property-card', { property: property }) %>
+                    <% }) %>
+                </div>
+                <a href="#" class="carousel-arrow featured-prev">&#10094;</a>
+                <a href="#" class="carousel-arrow featured-next">&#10095;</a>
+            </div>
+            <br><br>
+        </section>
+    <% }) %>
+</div>

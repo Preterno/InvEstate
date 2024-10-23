@@ -1,0 +1,198 @@
+<div style="padding: 3rem 0rem">
+  <div class="property-page">
+    <div class="property-header">
+      <h1><%= property.name %></h1>
+      <button
+        class="invest-now"
+        onclick="initiatePayment('<%=property.investment_minimum%>')"
+      >
+        Invest Now
+      </button>
+    </div>
+    <div class="property-images">
+      <div>
+        <img
+          src="<%= property.photos[0] %>"
+          alt="Main Property Image"
+          height="380px"
+          width="525px"
+          style="border-top-left-radius: 1rem; border-bottom-left-radius: 1rem"
+        />
+      </div>
+      <div class="pi">
+        <img
+          src="<%= property.photos[1] %>"
+          alt="Property Image 2"
+          height="187px"
+          width="310px"
+        />
+        <img
+          src="<%= property.photos[2] %>"
+          alt="Property Image 3"
+          height="187px"
+          width="310px"
+          style="border-top-right-radius: 1rem"
+        />
+        <img
+          src="<%= property.photos[3] %>"
+          alt="Property Image 4"
+          height="187px"
+          width="310px"
+        />
+        <img
+          src="<%= property.photos[4] %>"
+          alt="Property Image 5"
+          height="187px"
+          width="310px"
+          style="border-bottom-right-radius: 1rem"
+        />
+      </div>
+    </div>
+    <div class="property-desc">
+      <h2><%= property.description %></h2>
+    </div>
+    <div class="property-details">
+      <div class="pd">
+        <ul>
+          <li>
+            <strong>Total Area:</strong> <%= property.total_area %> sq. ft
+          </li>
+          <li><strong>Bedrooms:</strong> <%= property.bedrooms %> Bedrooms</li>
+          <li>
+            <strong>Bathrooms:</strong> <%= property.bathrooms %> Bathrooms
+          </li>
+        </ul>
+      </div>
+      <div class="pd">
+        <ul>
+          <li>
+            <strong>Target Closing Date:</strong> <%=
+            property.target_closing_date %>
+          </li>
+          <li><strong>Property Type:</strong> <%= property.property_type %></li>
+          <li>
+            <strong>Investment Minimum:</strong> ₹<%=
+            property.investment_minimum %>
+          </li>
+        </ul>
+      </div>
+      <div class="pd">
+        <ul>
+          <li><strong>Predicted ROI:</strong> <%= property.roi %>%</li>
+          <li>
+            <strong>Total Project Cost:</strong> ₹<%= property.project_cost %>
+          </li>
+          <li><strong>Risk Level:</strong> <%= property.risk_level %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="desc-container">
+    <h1>Investment Structure</h1>
+    <div class="investment-structure">
+      <ul>
+        <li>
+          <strong>Capital Stack:</strong>
+          <ul>
+            <li>+ Equity investment: ₹<%= property.equity_investment %></li>
+            <li>+ Senior loan: ₹<%= property.senior_loan %></li>
+            <li>+ Total project cost: ₹<%= property.project_cost %></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Distributions and Reporting:</strong>
+          <p>
+            Investor distributions will occur on a quarterly basis, starting 3
+            months after acquisition. Detailed financial reports will also be
+            provided quarterly.
+          </p>
+        </li>
+      </ul>
+    </div>
+
+    <h1>Fees & Expenses</h1>
+    <div class="fees-expenses">
+      <ul>
+        <li>
+          <strong>InvEstate Servicing Fee:</strong> 1.0% of Invested Capital
+          (Annual)
+        </li>
+        <li>
+          <strong>Administrative Expenses:</strong>
+          <ul>
+            <li>+ First Year Expense: ₹1000 per investor</li>
+            <li>+ Annual Flat Year Expense: ₹1000 per investor</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h1>Legal & Disclosure</h1>
+    <div class="legal-disclosure">
+      <ul>
+        <li>
+          <strong>Risks:</strong>
+          <p>
+            Investors should be aware of potential leverage risks, changes in
+            market demand, and reliance on future performance of rental income.
+          </p>
+        </li>
+        <li>
+          <strong>Forward-Looking Statements:</strong>
+          <p>
+            All projections are subject to market conditions and external
+            factors. Hypothetical returns are not guaranteed.
+          </p>
+        </li>
+        <li>
+          <strong>Tax Information:</strong>
+          <p>
+            Investors will receive 1099 forms for tax purposes. There may also
+            be original issue discount (OID) tax implications based on the loan
+            structure.
+          </p>
+        </li>
+        <li>
+          <strong>Disclosure Package:</strong>
+          <p>
+            All legal documents, including the Private Placement Memorandum
+            (PPM), Note Supplement, and risk factors, are available for detailed
+            review.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function initiatePayment(amount) {
+    try {
+      console.log("Initiating payment for amount:", amount);
+
+      const response = await fetch(`/payment?amt=${amount}`);
+      const data = await response.json();
+
+      console.log("Payment initialization response:", data);
+
+      if (!data.payment_session_id) {
+        throw new Error("No payment session ID received");
+      }
+
+      const cashfree = new Cashfree({
+        mode: "sandbox", 
+      });
+
+      const checkoutOptions = {
+        paymentSessionId: data.payment_session_id,
+        returnUrl: `${window.location.origin}/payment-status?order_id=${data.order_id}`,
+      };
+
+      const result = await cashfree.checkout(checkoutOptions);
+      console.log("Checkout result:", result);
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Payment initialization failed: " + error.message);
+    }
+  }
+</script>
