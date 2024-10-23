@@ -1,0 +1,14 @@
+<section class="hero">
+    <div class="hero-image">
+        <img src="/Assets/hero.webp" alt="Real Estate Building">
+    </div>
+    <div class="hero-content">
+        <h1 style="color: black; font-family: Roboto; font-weight:bold; font-size: 40px;">Invest in Real Estate with Ease and Confidence</h1>
+        <p style="color: #2a2e3a; font-size: 28px; font-family: Roboto;margin-bottom: 22px;">Join thousands of investors who are growing their wealth with secure, transparent, and high-performing real estate investments.</p>
+        <% if(!locals.loggedin) {%>
+        <a href="/signup" class="button" style="padding: 8px 20px 10px 20px; border-radius: 10px;">Get started</a>
+        <% }else { %>
+        <a href="/listing" class="button" style="padding: 8px 20px 10px 20px; border-radius: 10px;">Start investing</a>
+        <% } %>
+    </div>
+</section>

@@ -1,0 +1,24 @@
+<header class="header">
+    <a href="/"><div class="logo">
+        <div class="company_logo">
+            <img src="/Assets/logo.svg" alt="Company Logo">
+        </div>
+        <div class="company_name">
+            <img src="/Assets/logo_name.png" alt="Company Name">
+        </div>
+    </div>
+</a>
+    <nav class="nav">
+        <a href="/listing">Real Estate</a>
+        <a href="#">About</a>
+        <a href="https://www.investopedia.com/terms/r/reit.asp">Learn</a>
+        <a href="/#pricing">Pricing</a>
+        <% if (locals.showLoginSignup) { %>
+            <a href="/login" class="nav_login" style="color: #1848A0; font-weight: 500;">Login</a>
+            <a href="/signup" class="button">Get started</a>
+        <% } %>
+        <% if(locals.loggedin) {%>
+            <a href="/dashboard" style="color: #1848A0 !important;font-size: 17px; font-weight: 600;">My Portfolio</a>
+        <% } %>
+    </nav>
+</header>

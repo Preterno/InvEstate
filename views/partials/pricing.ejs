@@ -1,0 +1,39 @@
+<section class="pricing-section" id="pricing">
+    <div class="plans-container">
+        <div class="pricing-plan-signup">
+            <h2>Pricing Plans</h2>
+            <p class="pricing-description">Invest in real estate with a plan that fits your needs. Choose between our flexible pricing options and start building your wealth today!</p>
+            <% if(!locals.loggedin) {%>
+                <a href="/signup" class="sign-up-btn">Sign Up</a>
+            <% }else { %>
+                <a href="#" class="sign-up-btn">Go Pro</a>
+            <% } %>
+        </div>
+        <div class="plan starter-plan">
+            <h3>Starter Plan</h3>
+            <ul>
+                <li>Price: ₹0/month (Pay as you go)</li>
+                <li>Ideal For: Beginner investors</li>
+                <li>Access to all basic investment opportunities</li>
+                <li>Basic portfolio insights</li>
+                <li>Customer Support</li>
+                <li>No management fees on your first property</li>
+                <li>One-time fees per transaction</li>
+            </ul>
+        </div>
+        <div class="plan pro-plan">
+            <h3>Pro Plan</h3>
+            <ul>
+                <li>Price: ₹500/month</li>
+                <li>All Starter Plan features</li>
+                <li>Access to premium properties with higher ROI potential</li>
+                <li>Projected ROI based on historical data, market trends, and property characteristics</li>
+                <li>Advanced portfolio insights</li>
+                <li>Early access to new property listings</li>
+                <li>Auto-invest options</li>
+                <li>Priority support</li>
+                <li>Lower transaction fees</li>
+            </ul>
+        </div>
+    </div>
+</section>
