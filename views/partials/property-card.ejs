@@ -1,0 +1,14 @@
+<div class="property-card" style="box-shadow: 5px 5px 5px <%= locals.index ? '#586c85' : '#aaaaaa' %>;">
+  <img src="<%= property.photos[0] %>" alt="<%= property.name %> " />
+  <div class="property-info">
+    <h3><%= property.name %></h3>
+    <br />
+    <div class="propetry-end">
+      <p>Minimum Investment: ₹<%= property.investment_minimum %></p>
+      <p>Predicted ROI: <%= property.roi %>%</p>
+      <a href="/listing/<%= property.id %>" class="view-offering"
+        >View Offering</a
+      >
+    </div>
+  </div>
+</div>
