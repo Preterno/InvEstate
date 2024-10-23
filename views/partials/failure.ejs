@@ -1,0 +1,24 @@
+<div class="loading-container">
+    <div class="loading"></div>
+    <div class="crossmark-container">
+      <svg class="crossmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="crossmark-circle" cx="26" cy="26" r="23.5" fill="none"/>
+        <path class="crossmark-cross" fill="none" d="M16 16l20 20M16 36L36 16"/>
+      </svg>
+    </div>
+    <p class="message">Transaction processing, please wait...</p>
+  </div>
+  
+  <script>
+    setTimeout(function() {
+      document.querySelector('.loading').style.display = 'none';
+      document.querySelector('.crossmark-container').style.display = 'block';
+      
+      document.querySelector('.message').textContent = 'Transaction failed, redirecting...';
+      
+      setTimeout(function() {
+        window.location.href = '/listing'; 
+      }, 2000);
+    }, 2000);
+  </script>
+  

@@ -1,0 +1,24 @@
+<div class="page-container">
+    <div class="content-wrapper">
+        <section class="welcome-section">
+            <img src="/Assets/login.webp" alt="Modern building" />
+            <h1>Welcome to Modern Real Estate Investing.</h1>
+            <p>It's an incredible opportunity to be able to invest in cities across the country without leaving our home.</p>
+        </section>
+        <section class="signup-section">
+            <h2>Create an account</h2>
+            <form id="signup-form" action="/signup" method="POST">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Email address" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="privacy-policy" required>
+                    <label for="privacy-policy">I accept the Privacy Policies</label>
+                </div>
+                <button type="submit">Create an account</button>
+            </form>
+            <p class="index-link">Already have an account? <a href="/login">Log in</a></p>
+        </section>
+    </div>
+</div>

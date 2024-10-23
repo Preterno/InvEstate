@@ -1,0 +1,20 @@
+<div class="loading-container">
+  <div class="checkmark-container">
+    <svg
+      class="checkmark"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 52 52"
+    >
+      <circle class="checkmark-circle" cx="26" cy="26" r="23.5" fill="none" />
+      <path class="checkmark-check" fill="none" d="M14 27l7 7 16-16" />
+    </svg>
+  </div>
+  <p class="message">Succesfully Logged out</p>
+</div>
+
+<script>
+  document.querySelector(".checkmark-container").style.display = "block";
+  setTimeout(function () {
+    window.location.href = "/";
+  }, 3000);
+</script>

@@ -1,0 +1,235 @@
+    <style>
+      .portfolio-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .portfolio-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 24px;
+        color: #153969;
+      }
+      .portfolio-card {
+        background-color: #ffffff; /* Default white background */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s, color 0.3s; /* Smooth color transition */
+      }
+      .portfolio-card-title {
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 16px;
+      }
+      .portfolio-stats {
+        font-weight: 500
+      }
+      .portfolio-stats-value {
+        color: #4b5563; /* Dark gray */
+      }
+      .portfolio-investment-type {
+        color: #3b82f6; /* Blue */
+      }
+      .investment-row {
+        border-bottom: 1px solid #e5e7eb; /* Light gray */
+        padding-bottom: 3px;
+        margin-bottom: 3px;
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: space-between;
+      }
+      .investment-row:last-child {
+        border-bottom: none;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 2.5rem;
+        margin-bottom: 2.5rem;
+      }
+      
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+        }
+      @media (max-width: 600px) {
+        .grid-item {
+          flex: 1 1 100%; /* One item in a row on small screens */
+        }
+      }
+    </style>
+  <body>
+    <div class="portfolio-container">
+      <h1 class="portfolio-title">Portfolio Overview</h1>
+
+      <!-- Quick Stats and Pie Chart Grid -->
+      <div class="grid">
+        <!-- Quick Stats Card -->
+        <div class="grid-item portfolio-card quick-stats ">
+          <h2 class="portfolio-card-title">Quick Stats</h2>
+          <div class="space-y-2">
+            <% for (const [key, value] of Object.entries(portfolioData.quickStats)) { %>
+            <div class="investment-row" style="font-size: 17px;">
+              <span class="portfolio-stats"
+                ><%= key.charAt(0).toUpperCase() +
+                key.slice(1).replace(/([A-Z])/g, ' $1').trim() %>:</span
+              >
+              <span class="portfolio-stats-value"><%= value %></span>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Diversification Pie Chart -->
+        <div class="grid-item portfolio-card pie-chart">
+          <h2 class="portfolio-card-title">Portfolio Diversification</h2>
+          <canvas id="diversificationChart"></canvas>
+          <!-- Smaller size -->
+        </div>
+        <!-- Investment List -->
+        <div class="grid-item portfolio-card investment-list">
+          <h2 class="portfolio-card-title">Investment List</h2>
+          <div class="space-y-4">
+            <% portfolioData.investments.forEach(investment => { %>
+            <div class="investment-row">
+              <span style="font-weight: 500"><%= investment.name %></span>
+              <span><%= investment.amount %></span>
+            </div>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Growth Chart and Investment List -->
+      <div class="grid-2">
+        <!-- Portfolio Growth Chart -->
+        <div class="portfolio-card growth-chart">
+          <h2 class="portfolio-card-title">Portfolio Value Growth</h2>
+          <canvas id="growthChart"></canvas>
+        </div>
+        <!-- Scenario Analysis Chart -->
+        <div class="portfolio-card">
+            <h2 class="portfolio-card-title">Market Scenario Analysis</h2>
+            <canvas id="scenarioChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Initialize charts
+      document.addEventListener('DOMContentLoaded', function() {
+          // Diversification Pie Chart
+          const diversificationCtx = document.getElementById('diversificationChart').getContext('2d');
+          const diversificationData = <%- JSON.stringify(portfolioData.diversification) %>;
+
+          new Chart(diversificationCtx, {
+              type: 'doughnut',
+              data: {
+                  labels: Object.keys(diversificationData),
+                  datasets: [{
+                      data: Object.values(diversificationData),
+                      backgroundColor: ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'],
+                  }]
+              },
+              options: {
+                  cutout: '60%',
+                  responsive: true,
+                  plugins: {
+                      legend: {
+                          labels: {
+                              padding: 20,
+                              boxWidth:30,
+                          },
+                          position: 'bottom'
+                      }
+                  },
+                  layout:{
+                      padding:-10
+                  }
+              },
+          });
+
+          // Growth Chart
+          const growthCtx = document.getElementById('growthChart').getContext('2d');
+          const growthData = <%- JSON.stringify(portfolioData.growthData) %>;
+
+          new Chart(growthCtx, {
+              type: 'line',
+              data: {
+                  labels: growthData.map(d => d.month),
+                  datasets: [{
+                      label: 'Portfolio Value',
+                      data: growthData.map(d => d.value),
+                      borderColor: '#2563eb',
+                      tension: 0.1
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  scales: {
+                      y: {
+                          ticks: {
+                              callback: value => `₹${(value / 1000).toFixed(0)}K`
+                          }
+                      }
+                  },
+                  plugins: {
+                      tooltip: {
+                          callbacks: {
+                              label: context => `₹${(context.raw / 1000).toFixed(1)}K`
+                          }
+                      }
+                  }
+              }
+          });
+
+      // Scenario Chart
+            const scenarioCtx = document.getElementById('scenarioChart').getContext('2d');
+            const scenarioData = <%- JSON.stringify(portfolioData.scenarioData) %>;
+
+            new Chart(scenarioCtx, {
+                type: 'line',
+                data: {
+                    labels: scenarioData.map(d => d.month),
+                    datasets: [
+                        {
+                            label: 'Bullish Scenario',
+                            data: scenarioData.map(d => d.bullish),
+                            borderColor: '#22c55e',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Base Case',
+                            data: scenarioData.map(d => d.base),
+                            borderColor: '#2563eb',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Bearish Scenario',
+                            data: scenarioData.map(d => d.bearish),
+                            borderColor: '#ef4444',
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: value => `₹${(value / 1000).toFixed(0)}K`
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: context => `${context.dataset.label}: ₹${(context.raw / 1000).toFixed(1)}K`
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+  </body>
