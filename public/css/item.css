@@ -1,0 +1,130 @@
+body {
+  font-family: Roboto;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+.property-page {
+  background-color: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: transform 0.2s;
+  width: 1290px;
+  height: 750px;
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column; /* Stack elements vertically */
+}
+.property-card h1 {
+  color: #1848a0;
+}
+.property-card:hover {
+  transform: scale(1.02);
+}
+
+.property-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.property-header h1{
+    padding-left: 1rem;
+}
+.property-images {
+  display: flex;
+  justify-content: center;
+  margin-left: 10px;
+  /* position:relative; */
+}
+.pi {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  padding: 10px;
+  position: relative;
+  bottom: 0.58rem;
+}
+
+.property-images img {
+  object-fit: cover;
+}
+
+.property-desc {
+    padding: 16px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .property-desc h2{
+      padding: 0 5rem;
+      font-size: 22px;
+      color: #555;
+    }
+
+.property-details {
+  display: flex;
+  column-gap: 10rem;
+  padding: 16px;
+  justify-content: center;
+}
+.pd {
+  display: flex;
+}
+.property-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.property-details li {
+  margin: 5px 0;
+}
+
+.invest-now {
+  background-color: #1848a0;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 16px; /* Margin around the button */
+}
+
+.invest-now:hover {
+  background-color: #1857a0;
+}
+
+.container {
+  padding: 20px;
+  width: 100%; /* Full width up to the max */
+  margin: 0;
+  padding: 1rem 7.25rem;
+}
+
+h1 {
+  color: #2a2e3a; /* Dark header color */
+  margin-top: 20px; /* Space above the header */
+}
+
+ul {
+  list-style-type: none; /* Remove default bullets */
+  padding: 0; /* Remove padding */
+}
+
+li {
+  margin: 10px 0; /* Space between list items */
+}
+
+strong {
+  color: #1848a0; /* Highlight the strong text */
+}
+
+.investment-structure ul,
+.fees-expenses ul,
+.legal-disclosure ul {
+  padding-left: 20px; /* Indent nested lists */
+}
+
