@@ -1,0 +1,19 @@
+<%- include('partials/hero') %> <%- include('partials/carousel') %> <%-
+include('partials/features') %>
+<div style="padding: 4rem 7rem; background-color: #718bab">
+  <section>
+    <h2 style="text-align: center; color: #1e1e1e">Featured Property</h2>
+    <br />
+    <div class="carousel-container" style="padding-top: 1rem">
+      <div class="properties" style="gap: 3rem">
+        <% featuredProperties.forEach(function(property) { %> <%-
+        include('partials/property-card', { property: property }) %> <% }) %>
+      </div>
+      <a href="#" class="carousel-arrow featured-prev">&#10094;</a>
+      <a href="#" class="carousel-arrow featured-next">&#10095;</a>
+    </div>
+    <br /><br />
+  </section>
+</div>
+
+<%- include('partials/pricing') %>
