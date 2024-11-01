@@ -155,4 +155,5 @@ The AI models are implemented as Flask APIs in the following structure:
 - **Mohammed Aslam** - Backend Development • [Connect on LinkedIn](https://www.linkedin.com/in/aslam8483) 
 - **Pendem Sreevardhan** - Frontend Development • [Connect on LinkedIn](http://www.linkedin.com/in/sreevardhan-pendem)
 - **CV Kushal Kumar** - Frontend Development • [Connect on LinkedIn](https://www.linkedin.com/in/cv-kushal-kumar)
+- **Mohammed Haseeb** - Frontend Development • [Connect on LinkedIn](https://www.linkedin.com/in/mohammad-haseeb-54634a254/)
 - **Gaurav Malave** - Machine Learning Models • [Connect on LinkedIn](http://www.linkedin.com/in/gaurav-malave)
